@@ -1,0 +1,21 @@
+API:
+  host: '127.0.0.1'
+  port: 7777
+SRV-Composition:
+  host: '127.0.0.1'
+  port: 50051
+SRV-User:
+  host: '127.0.0.1'
+  port: 50052
+SRV-Creation:
+  host: '127.0.0.1'
+  port: 50053
+MySQL:
+  host: '106.55.143.205'
+  port: 3306
+  user: root
+  password: AIMusic
+Redis:
+  host: '106.55.143.205'
+  port: 6379
+  password: AIMusic

@@ -1,0 +1,32 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+option go_package = "/proto";
+
+service Creation{
+  rpc GetTemplate(google.protobuf.Empty)returns(GetTemplateResponse);
+  rpc Add(AddRequest)returns(AddResponse);
+}
+
+message Template {
+    string name = 1;
+    int64 type = 2;
+    string description = 3;
+    string pic = 4;
+}
+
+message GetTemplateResponse{
+  repeated Template template = 1;
+}
+
+message AddRequest{
+  string mobile = 1;
+  string name = 2;
+  string forWhat = 3;
+  string detail = 4;
+  string mp3 = 5;
+  int32 opt = 6;
+}
+
+message AddResponse{
+  string msg = 1;
+}

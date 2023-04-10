@@ -1,0 +1,18 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+option go_package = "/proto";
+
+service AIMusicSplice {
+    rpc MidiSplice(InputFile) returns (OutputFile) {}
+}
+
+message InputFile {
+    string firstName = 1;
+    string secondName = 2;
+    bytes firstContent = 3;
+    bytes secondContent = 4;
+}
+
+message OutputFile {
+    bytes spliced = 1;
+}

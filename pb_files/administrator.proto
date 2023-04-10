@@ -1,0 +1,112 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+option go_package = "/proto";
+
+service Administrator{
+  rpc GetUsage(google.protobuf.Empty)returns(Usage);
+  rpc ExecuteUser(ExecutionUserRequest)returns(ExecutionResponse);
+  rpc ExecuteCreation(ExecutionCreationRequest)returns(ExecutionResponse);
+  rpc EditBulletin(EditBulletinMsg)returns(EditBulletinMsg);
+  rpc UserAudit(google.protobuf.Empty)returns(UserAuditResponse);
+  rpc CreationAudit(google.protobuf.Empty)returns(CreationAuditResponse);
+  rpc GetUserFeedback(google.protobuf.Empty)returns(UserFeedbackResponse);
+}
+
+message UsageScratch{
+  int64 amount = 1;
+  string date = 2;
+}
+
+message UsageComposition{
+  int64 amount = 1;
+  string date = 2;
+}
+
+message ForWhat{
+  int64 amount = 1;
+  string name = 2;
+}
+
+message Usage{
+  repeated UsageScratch scratch = 1;
+  repeated  UsageComposition composition = 2;
+  repeated ForWhat forWhat = 3;
+}
+
+message ExecutionUserRequest{
+    string mobile = 1;
+    int32 opt = 2;
+}
+
+message ExecutionCreationRequest{
+  int64 id = 1;
+  int32 opt = 2;
+}
+
+message ExecutionResponse{
+  string msg = 1;
+}
+
+message EditBulletinMsg{
+  string msg = 1;
+}
+
+message TopLikesUser{
+  string mobile = 1;
+  string nickname = 2;
+  int64 likes = 3;
+  string motto = 4;
+  string avatar = 5;
+}
+
+message TopReportUser{
+  string mobile = 1;
+  string nickname = 2;
+  int64 report = 3;
+  string motto = 4;
+  string avatar = 5;
+}
+
+message TopLikesCreation{
+  int64 id = 1;
+  string name = 2;
+  int64 likes = 3;
+  string mp3 = 4;
+  string detail = 5;
+  string nick = 6;
+  string avatar = 7;
+}
+
+message TopReportCreation{
+  int64 id = 1;
+  string name = 2;
+  int64 report = 3;
+  string mp3 = 4;
+  string detail = 5;
+  string nick = 6;
+  string avatar = 7;
+}
+
+message UserAuditResponse{
+  repeated TopLikesUser userLikes = 1;
+  repeated TopReportUser userReport = 2;
+}
+
+message CreationAuditResponse{
+  repeated TopLikesCreation creationLikes = 1;
+  repeated TopReportCreation creationReport = 2;
+}
+
+message UserFeedback{
+  string nickname = 1;
+  string mobile = 2;
+  string avatar = 3;
+  string suspect = 4;
+  string evidence = 5;
+  string advice = 6;
+  int64 time = 7;
+}
+
+message UserFeedbackResponse{
+  repeated UserFeedback userFeedback = 1;
+}

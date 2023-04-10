@@ -1,0 +1,74 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+option go_package = "/proto";
+
+service Community{
+  rpc GetTop(google.protobuf.Empty)returns(TopCreation);
+  rpc GetBulletin(google.protobuf.Empty)returns(Bulletin);
+  rpc SearchUserByName(SearchRequest)returns(SearchUserResponse);
+  rpc SearchCreationByName(SearchRequest)returns(SearchCreationResponse);
+  rpc CreationAttitude(AttitudeCreation)returns(AttitudeResponse);
+}
+
+message CommunityCreation{
+  string userName = 1;
+  string userAvatar = 2;
+  string compositionName = 3;
+  string forWhat = 4;
+  string mp3 = 5;
+  int64 likes = 6;
+  uint64 createdTime = 7;
+  string detail = 8;
+  int64 id = 9;
+  int64 report = 10;
+}
+
+message TopCreation{
+  repeated CommunityCreation creation =1;
+}
+
+message Bulletin{
+  string msg = 1;
+}
+
+message SearchRequest{
+ string name = 1;
+}
+
+message PublicCreation{
+  string nickname = 1;
+  string compositionName = 2;
+  string detail = 3;
+  string forWhat = 4;
+  int64 likes = 5;
+  int64 report = 6;
+  string mp3 = 7;
+  int64 id = 9;
+  string avatar = 10;
+}
+
+message SearchUser{
+  string nickname = 1;
+  string gender = 2;
+  string pic = 3;
+  string birthday = 4;
+  string motto = 6;
+  repeated PublicCreation publicCreation = 5;
+}
+
+message SearchUserResponse{
+  repeated SearchUser users = 1;
+}
+
+message SearchCreationResponse{
+  repeated PublicCreation creations = 1;
+}
+
+message AttitudeCreation{
+  int64 id = 1;
+  int32 opt = 2;
+}
+
+message AttitudeResponse{
+  string msg = 1;
+}
