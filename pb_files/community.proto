@@ -21,10 +21,17 @@ message CommunityCreation{
   string detail = 8;
   int64 id = 9;
   int64 report = 10;
+  string chineseNote = 11;
+  string chineseEmotion = 12;
 }
 
 message TopCreation{
-  repeated CommunityCreation creation =1;
+  repeated CommunityCreation creation = 1;
+  repeated CommunityCreation creationGong = 2;
+  repeated CommunityCreation creationShang = 3;
+  repeated CommunityCreation creationJue = 4;
+  repeated CommunityCreation creationZhi = 5;
+  repeated CommunityCreation creationYu = 6;
 }
 
 message Bulletin{
@@ -45,6 +52,8 @@ message PublicCreation{
   string mp3 = 7;
   int64 id = 9;
   string avatar = 10;
+  string chineseNote = 11;
+  string chineseEmotion = 12;
 }
 
 message SearchUser{

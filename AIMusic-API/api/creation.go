@@ -56,14 +56,18 @@ func (c Creation) AddCreation(ctx *gin.Context) {
 	detail := ctx.PostForm("detail")
 	mp3 := ctx.PostForm("mp3")
 	optStr := ctx.PostForm("opt")
+	chineseNote := ctx.PostForm("chineseNote")
+	chineseEmotion := ctx.PostForm("chineseEmotion")
 	opt, _ := strconv.Atoi(optStr)
 	rsp, err := global.CreationClients[global.LoadBalancing(len(global.CreationInstances))].Add(context.Background(), &proto.AddRequest{
-		Mobile:  mobile,
-		Name:    name,
-		ForWhat: forWhat,
-		Detail:  detail,
-		Mp3:     mp3,
-		Opt:     int32(opt),
+		Mobile:         mobile,
+		Name:           name,
+		ForWhat:        forWhat,
+		Detail:         detail,
+		Mp3:            mp3,
+		Opt:            int32(opt),
+		ChineseNote:    chineseNote,
+		ChineseEmotion: chineseEmotion,
 	})
 	if err != nil {
 		zap.S().Errorw("[AddCreation]添加用户作品失败")

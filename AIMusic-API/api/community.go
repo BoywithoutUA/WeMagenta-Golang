@@ -15,6 +15,30 @@ import (
 
 type Community struct{}
 
+type creation struct {
+	Id              int64  `json:"id"`
+	UserName        string `json:"userName"`
+	UserAvatar      string `json:"userAvatar"`
+	CompositionName string `json:"compositionName"`
+	ForWhat         string `json:"forWhat"`
+	Mp3             string `json:"mp3"`
+	Likes           int64  `json:"likes"`
+	Report          int64  `json:"report"`
+	CreationTime    string `json:"creationTime"`
+	Detail          string `json:"detail"`
+	Note            string `json:"note"`
+	Emotion         string `json:"emotion"`
+}
+
+type creations struct {
+	Creation      []creation `json:"creation"`
+	CreationGong  []creation `json:"creationGong"`
+	CreationShang []creation `json:"creationShang"`
+	CreationJue   []creation `json:"creationJue"`
+	CreationZhi   []creation `json:"creationZhi"`
+	CreationYu    []creation `json:"creationYu"`
+}
+
 func (c Community) Bulletin(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
 		"code": 200,
@@ -23,28 +47,8 @@ func (c Community) Bulletin(ctx *gin.Context) {
 	})
 }
 
-func (c Community) CreationTop(ctx *gin.Context) {
-	//rsp, err := global.CommunityClient.GetTop(context.Background(), &emptypb.Empty{})
-	rsp, err := global.CommunityClients[global.LoadBalancing(len(global.CommunityInstances))].GetTop(context.Background(), &emptypb.Empty{})
-	if err != nil {
-		zap.S().Errorw("[CreationTop]获取热门作品失败")
-		utils.HandleGrpcError2Http(err, ctx)
-		return
-	}
-	type creation struct {
-		Id              int64  `json:"id"`
-		UserName        string `json:"userName"`
-		UserAvatar      string `json:"userAvatar"`
-		CompositionName string `json:"compositionName"`
-		ForWhat         string `json:"forWhat"`
-		Mp3             string `json:"mp3"`
-		Likes           int64  `json:"likes"`
-		Report          int64  `json:"report"`
-		CreationTime    string `json:"creationTime"`
-		Detail          string `json:"detail"`
-	}
-	var result []creation
-	for _, v := range rsp.Creation {
+func bindCreationStruct(dst []creation, src []*proto.CommunityCreation) {
+	for _, v := range src {
 		var t creation
 		t.Id = v.Id
 		t.Likes = v.Likes
@@ -56,8 +60,29 @@ func (c Community) CreationTop(ctx *gin.Context) {
 		t.ForWhat = v.ForWhat
 		t.Detail = v.Detail
 		t.Report = v.Report
-		result = append(result, t)
+		t.Note = v.ChineseNote
+		t.Emotion = v.ChineseEmotion
+		dst = append(dst, t)
 	}
+}
+
+func (c Community) CreationTop(ctx *gin.Context) {
+	//rsp, err := global.CommunityClient.GetTop(context.Background(), &emptypb.Empty{})
+	rsp, err := global.CommunityClients[global.LoadBalancing(len(global.CommunityInstances))].GetTop(context.Background(), &emptypb.Empty{})
+	if err != nil {
+		zap.S().Errorw("[CreationTop]获取热门作品失败")
+		utils.HandleGrpcError2Http(err, ctx)
+		return
+	}
+
+	var result creations
+	bindCreationStruct(result.Creation, rsp.Creation)
+	bindCreationStruct(result.CreationGong, rsp.CreationGong)
+	bindCreationStruct(result.CreationShang, rsp.CreationShang)
+	bindCreationStruct(result.CreationJue, rsp.CreationJue)
+	bindCreationStruct(result.CreationZhi, rsp.CreationZhi)
+	bindCreationStruct(result.CreationYu, rsp.CreationYu)
+
 	ctx.JSON(http.StatusOK, gin.H{
 		"code": 200,
 		"data": result,
@@ -115,6 +140,8 @@ func (c Community) CreationSearch(ctx *gin.Context) {
 		Report          int64  `json:"report"`
 		Mp3             string `json:"mp3"`
 		Avatar          string `json:"avatar"`
+		Note            string `json:"note"`
+		Emotion         string `json:"emotion"`
 	}
 	var result []creation
 	for _, v := range rsp.Creations {
@@ -128,6 +155,8 @@ func (c Community) CreationSearch(ctx *gin.Context) {
 		t.Report = v.Report
 		t.Mp3 = v.Mp3
 		t.Avatar = v.Avatar
+		t.Note = v.ChineseNote
+		t.Emotion = v.ChineseEmotion
 		result = append(result, t)
 	}
 	ctx.JSON(http.StatusOK, gin.H{

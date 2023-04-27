@@ -172,22 +172,26 @@ func (a Administrator) CreationAudit(c *gin.Context) {
 		return
 	}
 	type likes struct {
-		Id     int64  `json:"id"`
-		Name   string `json:"name"`
-		Likes  int64  `json:"likes"`
-		Mp3    string `json:"mp3"`
-		Detail string `json:"detail"`
-		Nick   string `json:"nick"`
-		Avatar string `json:"avatar"`
+		Id      int64  `json:"id"`
+		Name    string `json:"name"`
+		Likes   int64  `json:"likes"`
+		Mp3     string `json:"mp3"`
+		Detail  string `json:"detail"`
+		Nick    string `json:"nick"`
+		Avatar  string `json:"avatar"`
+		Note    string `json:"note"`
+		Emotion string `json:"emotion"`
 	}
 	type report struct {
-		Id     int64  `json:"id"`
-		Name   string `json:"name"`
-		Report int64  `json:"likes"`
-		Mp3    string `json:"mp3"`
-		Detail string `json:"detail"`
-		Nick   string `json:"nick"`
-		Avatar string `json:"avatar"`
+		Id      int64  `json:"id"`
+		Name    string `json:"name"`
+		Report  int64  `json:"likes"`
+		Mp3     string `json:"mp3"`
+		Detail  string `json:"detail"`
+		Nick    string `json:"nick"`
+		Avatar  string `json:"avatar"`
+		Note    string `json:"note"`
+		Emotion string `json:"emotion"`
 	}
 	type ginResponse struct {
 		Likes  []likes  `json:"likes"`

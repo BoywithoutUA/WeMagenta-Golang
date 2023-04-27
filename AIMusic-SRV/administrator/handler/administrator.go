@@ -110,6 +110,8 @@ func (a *AdministratorServer) CreationAudit(context.Context, *emptypb.Empty) (*p
 		tmp.Detail = v.Detail
 		tmp.Nick = v.CreatorNickname
 		tmp.Avatar = v.Avatar
+		tmp.ChineseNote = v.ChineseNote
+		tmp.ChineseEmotion = v.ChineseEmotion
 		likesCreation = append(likesCreation, tmp)
 	}
 	for _, v := range compositionReport {
@@ -120,6 +122,8 @@ func (a *AdministratorServer) CreationAudit(context.Context, *emptypb.Empty) (*p
 		tmp.Mp3 = v.MP3
 		tmp.Detail = v.Detail
 		tmp.Avatar = v.Avatar
+		tmp.ChineseNote = v.ChineseNote
+		tmp.ChineseEmotion = v.ChineseEmotion
 		reportCreation = append(reportCreation, tmp)
 	}
 	return &proto.CreationAuditResponse{

@@ -25,6 +25,8 @@ message AddRequest{
   string detail = 4;
   string mp3 = 5;
   int32 opt = 6;
+  string chineseNote = 7;
+  string chineseEmotion = 8;
 }
 
 message AddResponse{

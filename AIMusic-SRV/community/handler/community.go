@@ -12,11 +12,8 @@ type CommunityServer struct {
 	proto.UnimplementedCommunityServer
 }
 
-func (c *CommunityServer) GetTop(context.Context, *emptypb.Empty) (*proto.TopCreation, error) {
-	var compositionLikes []model.Composition
-	global.DB.Order("likes desc").Where("status = 1").Find(&compositionLikes).Limit(10)
-	var communityCreation []*proto.CommunityCreation
-	for _, v := range compositionLikes {
+func bindCreationStruct(dst []*proto.CommunityCreation, src []model.Composition) {
+	for _, v := range src {
 		tmp := new(proto.CommunityCreation)
 		tmp.Id = int64(v.ID)
 		tmp.ForWhat = v.CreatedFor
@@ -27,11 +24,45 @@ func (c *CommunityServer) GetTop(context.Context, *emptypb.Empty) (*proto.TopCre
 		tmp.Likes = v.Likes
 		tmp.Report = v.Report
 		tmp.Detail = v.Detail
+		tmp.ChineseNote = v.ChineseNote
+		tmp.ChineseEmotion = v.ChineseEmotion
 		tmp.CreatedTime = uint64(v.CreatedAt.Unix())
-		communityCreation = append(communityCreation, tmp)
+		dst = append(dst, tmp)
 	}
+}
 
-	return &proto.TopCreation{Creation: communityCreation}, nil
+func (c *CommunityServer) GetTop(context.Context, *emptypb.Empty) (*proto.TopCreation, error) {
+	var compositionLikes []model.Composition
+	var compositionLikesGong []model.Composition
+	var compositionLikesShang []model.Composition
+	var compositionLikesJue []model.Composition
+	var compositionLikesZhi []model.Composition
+	var compositionLikesYu []model.Composition
+	global.DB.Order("likes desc").Where("status = 1").Find(&compositionLikes).Limit(10)
+	global.DB.Order("likes desc").Where("status = 1 AND chinese_note = gong").Find(&compositionLikesGong).Limit(10)
+	global.DB.Order("likes desc").Where("status = 1 AND chinese_note = shang").Find(&compositionLikesShang).Limit(10)
+	global.DB.Order("likes desc").Where("status = 1 AND chinese_note = jue").Find(&compositionLikesJue).Limit(10)
+	global.DB.Order("likes desc").Where("status = 1 AND chinese_note = zhi").Find(&compositionLikesZhi).Limit(10)
+	global.DB.Order("likes desc").Where("status = 1 AND chinese_note = yu").Find(&compositionLikesYu).Limit(10)
+	var communityCreation []*proto.CommunityCreation
+	var communityCreationGong []*proto.CommunityCreation
+	var communityCreationShang []*proto.CommunityCreation
+	var communityCreationJue []*proto.CommunityCreation
+	var communityCreationZhi []*proto.CommunityCreation
+	var communityCreationYu []*proto.CommunityCreation
+	bindCreationStruct(communityCreation, compositionLikes)
+	bindCreationStruct(communityCreationGong, compositionLikesGong)
+	bindCreationStruct(communityCreationShang, compositionLikesShang)
+	bindCreationStruct(communityCreationJue, compositionLikesJue)
+	bindCreationStruct(communityCreationZhi, compositionLikesZhi)
+	bindCreationStruct(communityCreationYu, compositionLikesYu)
+	return &proto.TopCreation{
+		Creation:      communityCreation,
+		CreationGong:  communityCreationGong,
+		CreationShang: communityCreationShang,
+		CreationJue:   communityCreationJue,
+		CreationZhi:   communityCreationZhi,
+		CreationYu:    communityCreationYu}, nil
 }
 
 func (c *CommunityServer) GetBulletin(context.Context, *emptypb.Empty) (*proto.Bulletin, error) {
@@ -72,6 +103,8 @@ func (c *CommunityServer) SearchCreationByName(ctx context.Context, req *proto.S
 		tmp.CompositionName = v.CompositionName
 		tmp.Detail = v.Detail
 		tmp.Avatar = v.Avatar
+		tmp.ChineseNote = v.ChineseNote
+		tmp.ChineseEmotion = v.ChineseEmotion
 		creationPb = append(creationPb, tmp)
 	}
 	return &proto.SearchCreationResponse{Creations: creationPb}, nil

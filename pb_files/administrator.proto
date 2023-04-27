@@ -75,6 +75,8 @@ message TopLikesCreation{
   string detail = 5;
   string nick = 6;
   string avatar = 7;
+  string chineseNote = 8;
+  string chineseEmotion = 9;
 }
 
 message TopReportCreation{
@@ -85,6 +87,8 @@ message TopReportCreation{
   string detail = 5;
   string nick = 6;
   string avatar = 7;
+  string chineseNote = 8;
+  string chineseEmotion = 9;
 }
 
 message UserAuditResponse{

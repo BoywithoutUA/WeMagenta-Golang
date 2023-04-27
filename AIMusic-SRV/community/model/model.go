@@ -40,6 +40,8 @@ type Composition struct {
 	Status          int32  `gorm:"type:tinyint;not null"`
 	Likes           int64  `gorm:"type:int;default:0;index:idx_likes;not null"`
 	Report          int64  `gorm:"type:int;default:0;index:idx_likes;not null"`
+	ChineseNote     string `gorm:"type:varchar(8);not null"`
+	ChineseEmotion  string `gorm:"type:varchar(8);not null"`
 }
 
 type Template struct {
