@@ -47,7 +47,7 @@ func (c Community) Bulletin(ctx *gin.Context) {
 	})
 }
 
-func bindCreationStruct(dst []creation, src []*proto.CommunityCreation) {
+func bindCreationStruct(dst *[]creation, src []*proto.CommunityCreation) {
 	for _, v := range src {
 		var t creation
 		t.Id = v.Id
@@ -62,7 +62,7 @@ func bindCreationStruct(dst []creation, src []*proto.CommunityCreation) {
 		t.Report = v.Report
 		t.Note = v.ChineseNote
 		t.Emotion = v.ChineseEmotion
-		dst = append(dst, t)
+		*dst = append(*dst, t)
 	}
 }
 
@@ -76,12 +76,12 @@ func (c Community) CreationTop(ctx *gin.Context) {
 	}
 
 	var result creations
-	bindCreationStruct(result.Creation, rsp.Creation)
-	bindCreationStruct(result.CreationGong, rsp.CreationGong)
-	bindCreationStruct(result.CreationShang, rsp.CreationShang)
-	bindCreationStruct(result.CreationJue, rsp.CreationJue)
-	bindCreationStruct(result.CreationZhi, rsp.CreationZhi)
-	bindCreationStruct(result.CreationYu, rsp.CreationYu)
+	bindCreationStruct(&result.Creation, rsp.Creation)
+	bindCreationStruct(&result.CreationGong, rsp.CreationGong)
+	bindCreationStruct(&result.CreationShang, rsp.CreationShang)
+	bindCreationStruct(&result.CreationJue, rsp.CreationJue)
+	bindCreationStruct(&result.CreationZhi, rsp.CreationZhi)
+	bindCreationStruct(&result.CreationYu, rsp.CreationYu)
 
 	ctx.JSON(http.StatusOK, gin.H{
 		"code": 200,

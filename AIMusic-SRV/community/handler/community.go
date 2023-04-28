@@ -12,7 +12,7 @@ type CommunityServer struct {
 	proto.UnimplementedCommunityServer
 }
 
-func bindCreationStruct(dst []*proto.CommunityCreation, src []model.Composition) {
+func bindCreationStruct(dst *[]*proto.CommunityCreation, src []model.Composition) {
 	for _, v := range src {
 		tmp := new(proto.CommunityCreation)
 		tmp.Id = int64(v.ID)
@@ -27,7 +27,7 @@ func bindCreationStruct(dst []*proto.CommunityCreation, src []model.Composition)
 		tmp.ChineseNote = v.ChineseNote
 		tmp.ChineseEmotion = v.ChineseEmotion
 		tmp.CreatedTime = uint64(v.CreatedAt.Unix())
-		dst = append(dst, tmp)
+		*dst = append(*dst, tmp)
 	}
 }
 
@@ -39,23 +39,23 @@ func (c *CommunityServer) GetTop(context.Context, *emptypb.Empty) (*proto.TopCre
 	var compositionLikesZhi []model.Composition
 	var compositionLikesYu []model.Composition
 	global.DB.Order("likes desc").Where("status = 1").Find(&compositionLikes).Limit(10)
-	global.DB.Order("likes desc").Where("status = 1 AND chinese_note = gong").Find(&compositionLikesGong).Limit(10)
-	global.DB.Order("likes desc").Where("status = 1 AND chinese_note = shang").Find(&compositionLikesShang).Limit(10)
-	global.DB.Order("likes desc").Where("status = 1 AND chinese_note = jue").Find(&compositionLikesJue).Limit(10)
-	global.DB.Order("likes desc").Where("status = 1 AND chinese_note = zhi").Find(&compositionLikesZhi).Limit(10)
-	global.DB.Order("likes desc").Where("status = 1 AND chinese_note = yu").Find(&compositionLikesYu).Limit(10)
+	global.DB.Order("likes desc").Where("status = 1 AND chinese_note = ?", "gong").Find(&compositionLikesGong).Limit(10)
+	global.DB.Order("likes desc").Where("status = 1 AND chinese_note = ?", "shang").Find(&compositionLikesShang).Limit(10)
+	global.DB.Order("likes desc").Where("status = 1 AND chinese_note = ?", "jue").Find(&compositionLikesJue).Limit(10)
+	global.DB.Order("likes desc").Where("status = 1 AND chinese_note = ?", "zhi").Find(&compositionLikesZhi).Limit(10)
+	global.DB.Order("likes desc").Where("status = 1 AND chinese_note = ?", "yu").Find(&compositionLikesYu).Limit(10)
 	var communityCreation []*proto.CommunityCreation
 	var communityCreationGong []*proto.CommunityCreation
 	var communityCreationShang []*proto.CommunityCreation
 	var communityCreationJue []*proto.CommunityCreation
 	var communityCreationZhi []*proto.CommunityCreation
 	var communityCreationYu []*proto.CommunityCreation
-	bindCreationStruct(communityCreation, compositionLikes)
-	bindCreationStruct(communityCreationGong, compositionLikesGong)
-	bindCreationStruct(communityCreationShang, compositionLikesShang)
-	bindCreationStruct(communityCreationJue, compositionLikesJue)
-	bindCreationStruct(communityCreationZhi, compositionLikesZhi)
-	bindCreationStruct(communityCreationYu, compositionLikesYu)
+	bindCreationStruct(&communityCreation, compositionLikes)
+	bindCreationStruct(&communityCreationGong, compositionLikesGong)
+	bindCreationStruct(&communityCreationShang, compositionLikesShang)
+	bindCreationStruct(&communityCreationJue, compositionLikesJue)
+	bindCreationStruct(&communityCreationZhi, compositionLikesZhi)
+	bindCreationStruct(&communityCreationYu, compositionLikesYu)
 	return &proto.TopCreation{
 		Creation:      communityCreation,
 		CreationGong:  communityCreationGong,
